@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        %include head.tmpl
+        <style type="text/css">
+            body {
+                -webkit-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+            td, th {
+                padding: 0 4px 0 4px;
+                text-align: center;
+                border: 1px solid black;
+            }
+            p {
+                margin: 0;
+                padding: 2px 0 2px 0;
+                color: black;
+            }
+            #map-canvas {
+                height            : 100%;
+                width             : 100%;
+                display           : inline-block;
+                border: 1px solid black;
+            }
+            #update_button {
+                padding           : 5px;
+                background-color   : 'white';
+                border-style       : 'solid';
+                border-width       : 2px;
+                text-align         : 'center';
+            }
+            .labels {
+                color             : yellow;
+                background-color  : blue;
+                font-family       : "Lucida Grande", "Arial", sans-serif;
+                font-size         : 10px;
+                font-weight       : bold;
+                text-align        : center;
+                width             : 40px;
+                border            : 1px solid yellow;
+                white-space       : nowrap;
+            }
+            #topology-options {
+                margin-bottom     : 10px;
+            }
+            .menu {
+                background-color: #f1f1f1;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                border-radius: 3px;
+            }
+            .tab {
+                overflow: hidden;
+                border: 1px solid #ccc;
+                background-color: #f1f1f1;
+                border-radius: 3px;
+            }
+            .tab button {
+                background-color: inherit;
+                float: left;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                padding: 5px 10px;
+                transition: 0.3s;
+                font-size: 17px;
+                border-radius: 3px;
+            }
+            .tab button:hover {
+                background-color: #ddd;
+            }
+            .tab button.active {
+                background-color: #ccc;
+            }
+            .tabcontent {
+                display: none;
+                padding: 6px 12px;
+                border: 1px solid #ccc;
+                border-top: none;
+                border-radius: 3px;
+            }
+        </style>
+        <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+        <script type="text/javascript">
+            var moteid;
+            var DATA_LOAD_INTERVAL = 5000;
+        </script> 
+        <script defer type="text/javascript" src="../static/js/topology.js"></script>
+    </head>
+
+    <body>
+        <div id="wrapper">
+            %include navbar.tmpl ovVersion=ovVersion
+
+            <div id="page-wrapper">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">Advanced Topology</h1>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <select class="rel_value_fld" id="mote_select" size="1">
+                            <option value="none">Select mote...</option>
+                        </select>
+                        <button id="toggle_btn" type="button" class="btn btn-default btn-xs">Toggle DAGroot state</button>
+                        <script>
+                            $("#mote_select").change(function() {
+                                moteid =  $(this).val()
+                                if (moteid != null && moteid != undefined && moteid != 'none') {
+                                    console.log('Update for mote selection: ' + moteid);
+                                    // Store to allow automatically selecting this mote.
+                                    setCookie("selected_mote", moteid);
+                                } else {
+                                    console.log('Update for mote selection: ' + moteid);
+                                    // Store to allow automatically selecting this mote.
+                                    setCookie("selected_mote", moteid);
+                                }
+                                
+                                // Don't allow to reselect null option.
+                                $("#mote_select option[value='none']").remove();
+                            });
+                        </script>
+                        <script>
+                            document.getElementById("toggle_btn").addEventListener('click', () =>{
+                                console.log('Toggling root for mote ' + moteid);
+                                $.ajax({
+                                    dataType: "json",
+                                    url: "/toggleDAGroot/" + moteid,
+                                    success: () => {console.log('Toggle root succeeded'); DATA_LOAD_INTERVAL = 10000; },
+                                    error: () => {console.log('Toggle root failed'); }
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+                
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <canvas id="map-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
