@@ -219,6 +219,8 @@ Web view (main tab)            |  Web view (topology tab)
 
 ### Hardware <a name="hardware"></a>
 
+This section is not yet complete
+
 ### Simulation mode <a name="simulation-mode"></a>
 
 To run on simulation mode, you will need to run this command first
@@ -283,6 +285,23 @@ Running the _OpenVisualizer Server_ as a frontend for the OpenTestBed is as simp
 ```
 The server connects in the background to the MQTT server that gathers the data from the testbed and subscribes to the appropriate topics.
 
+### Docker <a name="docker"></a>
+
+Openvisualizer can be run in docker containers. To do so, you need to have docker installed on your machine. You can find the installation instructions [here](https://docs.docker.com/install/). It is recommended to linux users to add docker to the sudoers group so that you don't need to use sudo for every docker command. You can find the instructions [here](https://docs.docker.com/install/linux/linux-postinstall/). <br>
+
+Go to the root of the project and run the following command to build the docker image:
+
+```bash
+$ docker-compose build
+$ docker-compose up -d
+```
+The current docker-compose file will run the openv-server and openv-client in two different containers, with set commands to run a simulation in the server container and run the web view in the client container. You can access the openv-client container by running the following command:
+
+```bash
+$ docker exec -it container_name bash
+```
+You can learn more about docker-compose [here](https://docs.docker.com/compose/) and about docker [here](https://docs.docker.com/).
+
 ## Documentation <a name="docs"></a>
 
 The docs can be generated through Sphinx. Navigate to the root of the project and run the following the command:
@@ -295,3 +314,66 @@ The docs can be generated through Sphinx. Navigate to the root of the project an
 * build will contain the output
 
 More information can be found on the [Sphinx webpage](https://www.sphinx-doc.org/en/master/usage/quickstart.html)
+
+## Testing <a name="testing"></a>
+
+### Testing the serial communication
+The OpenWSN firmware uses the serial port extensively to communicate with OpenVisualizer and route packets (when in DAGroot mode). It is thus important that serial communication works well. To verify the serial communication between the hardware motes and your computer you can use the `openv-serial` tool.
+
+| ![openv-serial](https://raw.githubusercontent.com/openwsn-berkeley/openvisualizer/develop/images/openv-serial.png) |
+|:--:|
+| *openv-serial tool for testing the serial communication* |
+
+### Testing the TUN interface
+To route packets between the Internet and the OpenWSN mesh network, OpenVisualizer uses a TUN interface. To create such an interface you need root privileges on your system. To test if everything works properly, you can run `openv-tun`.
+
+| ![openv-tun](https://raw.githubusercontent.com/openwsn-berkeley/openvisualizer/develop/images/openv-tun.png) |
+|:--:|
+| *openv-tun tool for testing the TUN interface* |
+
+
+## Contributing <a name="contributing"></a>
+Contributions are always welcome. We use `flake8` to enforce the Python PEP-8 style guide. The Travis builder verifies new pull requests and it fails if the Python code does not follow the style guide.
+
+You can check locally if your code changes comply with PEP-8. First, install the main `flake8` package and two `flake8` plugins:
+
+```bash
+(venv) pip install flake8
+(venv) pip install pep8-naming
+(venv) pip install flake8-commas
+```
+
+Move to the root of the OpenVisualizer project and run:
+
+```bash
+(venv) flake8 --config=tox.ini
+```
+
+If flake does not generate any output, your code passes the test; alternatively, you can check the return code:
+
+```bash
+(venv) flake8 --config=tox.ini
+(venv) echo $?
+0
+```
+
+## Contact <a name="contact"></a>
+
+
+[home page](https://openwsn.atlassian.net/wiki/display/OW/OpenVisualizer)
+
+[PyPi](https://pypi.org/)
+
+[mailing list](https://openwsn.atlassian.net/wiki/display/OW/Mailing+List)
+
+[issue report](https://openwsn.atlassian.net)
+
+[IoT-LAB](https://www.iot-lab.info/)
+
+[openwsn-fw](https://github.com/openwsn-berkeley/openwsn-fw)
+
+[openwsn-dashboard](https://openwsn-dashboard.eu-gb.mybluemix.net/ui/)
+
+[OpenTestbed](https://github.com/openwsn-berkeley/opentestbed)
+
+[localhost:8080](http://localhost:8080/)

@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  openv-server:
+    image: openv_img:latest
+    container_name: OpenV_Server
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - 9000:9000
+    networks:
+      - openv-network
+    stdin_open: true
+    tty: true
+    command: openv-server -H OpenV_Server -P 9000 --sim 8 --fw-path ~/openwsn-fw
+
+  openv-client:
+    image: openv_img:latest
+    container_name: OpenV_Client
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - openv-network
+    ports:
+      - 8080:8080
+    stdin_open: true
+    tty: true
+    command: openv-client --server OpenV_Server --port 9000 view web --web-host OpenV_Client --web-port 8080 --rpc-host OpenV_Server --rpc-port 9000
+    depends_on:
+      - openv-server
+  
+networks:
+  openv-network:
+    driver: bridge
