@@ -934,7 +934,7 @@ window.addEventListener('resize', resize);
 
 canvas.addEventListener("mousemove", move);
 
-canvas.addEventListener("mousedown", down(e));
+canvas.addEventListener("mousedown", down);
 
 canvas.addEventListener("mouseup", up);
 
