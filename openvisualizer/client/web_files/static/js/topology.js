@@ -2,10 +2,6 @@
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
-var rect = canvas.getBoundingClientRect();
-var scaleX = canvas.width / rect.width;
-var scaleY = canvas.height / rect.height;
-
 var motes = [];
 var connections = [];
 var mote_selection = undefined;
@@ -17,6 +13,10 @@ function resize() {
     canvas.height = window.innerHeight;
 }
 resize();
+
+var rect = canvas.getBoundingClientRect();
+var scaleX = canvas.width / rect.width;
+var scaleY = canvas.height / rect.height;
 
 function within(x, y) {
     /* Check if cursor is within a mote or connection link */
@@ -153,6 +153,7 @@ function draw() {
 
 function down(e) {
     /* Select mote on mouse down */
+    console.log((e.clientX-rect.left+window.scrollX)*scaleX, (e.clientY-rect.top+window.scrollY)*scaleY);
 
     let target = within((e.clientX-rect.left+window.scrollX)*scaleX, (e.clientY-rect.top+window.scrollY)*scaleY);
     if(mote_selection && mote_selection.selected) {
@@ -933,7 +934,7 @@ window.addEventListener('resize', resize);
 
 canvas.addEventListener("mousemove", move);
 
-canvas.addEventListener("mousedown", down);
+canvas.addEventListener("mousedown", down(e));
 
 canvas.addEventListener("mouseup", up);
 
